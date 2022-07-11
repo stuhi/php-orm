@@ -15,7 +15,7 @@ class Mapping
 
     public bool $hasId = false;
     public bool $hasParentId = false;
-    
+
     private $class;
 
     public function __construct($className)
@@ -32,36 +32,36 @@ class Mapping
                 $this->columnKeys[] = $column;
                 if ($i == 0)
                 {
-                    $this->types[$column] = 'int';
+                    $this->types[$column] = Type::Int;
                     $this->nulls[$column] = false;
                     $this->columns[$column] = 'id';
                     $this->hasId = true;
                 }
                 else if ($i == 1)
                 {
-                    $this->types[$column] = 'int';
+                    $this->types[$column] = Type::Int;
                     $this->nulls[$column] = true;
                     $this->columns[$column] = 'parentId';
                     $this->hasParentId = true;
                 }
                 else if ($i == 2)
                 {
-                    $this->types[$column] = 'array';
+                    $this->types[$column] = Type::Array;
                     $this->nulls[$column] = false;
                     $this->columns[$column] = 'parentIds';
                     $this->hasParentId = true;
-                }                
+                }
             }
         }
 
-        foreach ($properties as $property) 
+        foreach ($properties as $property)
         {
             $name = $property->getName();
             $propertyAttrs = $property->getAttributes('Injix\Orm\Attributes\COLUMN');
             if (count($propertyAttrs) > 0)
             {
-                $column = $propertyAttrs[0]->getArguments()[0];            
-                $this->types[$column] = $property->getType()->getName();            
+                $column = $propertyAttrs[0]->getArguments()[0];
+                $this->types[$column] = $this->_getType($property->getType()->getName());
                 $this->nulls[$column] = $property->getType()->allowsNull();
                 $this->columns[$column] = $name;
                 $this->columnKeys[] = $column;
@@ -72,14 +72,14 @@ class Mapping
 
     public function mapping($row)
     {
-        if (count($this->rowKeys) == 0) 
+        if (count($this->rowKeys) == 0)
         {
             $this->rowKeys = array_keys($row);
         }
 
         $className = $this->class;
         $class = new $className();
-        foreach ($this->rowKeys as $key) 
+        foreach ($this->rowKeys as $key)
         {
             if (in_array($key, $this->columnKeys))
             {
@@ -95,22 +95,34 @@ class Mapping
                 {
                     switch ($type) 
                     {
-                        case 'string': $class->{$prop} = $value; break;
-                        case 'int': $class->{$prop} = intval($value);break;
-                        case 'bool': $class->{$prop} = boolval($value); break;
-                        case 'DateTime': $class->{$prop} = new DateTime($value); break;
-                        case 'array': $class->{$prop} = $this->_mapArray($value); break;
+                        case Type::String: $class->{$prop} = $value; break;
+                        case Type::Int: $class->{$prop} = intval($value);break;
+                        case Type::Bool: $class->{$prop} = boolval($value); break;
+                        case Type::DateTime: $class->{$prop} = new DateTime($value); break;
+                        case Type::Array: $class->{$prop} = $this->_mapArray($value); break;
                     }
-
                 }
             }
         }
-        
+
         return $class;
     }
 
     private function _mapArray(string $value) : array
     {
         return (!empty($value)) ? array_filter(explode('|', $value), function ($item) { return !empty($item); }) : array();
+    }
+
+    private function _getType($type)
+    {
+        switch ($type) 
+        {
+            case 'string': return Type::String;
+            case 'int': return Type::Int;
+            case 'bool': return Type::Bool;
+            case 'DateTime': return Type::DateTime;
+            case 'array': return Type::Array;
+        }
+        return Type::String;
     }
 }

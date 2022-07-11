@@ -21,9 +21,9 @@ class Db extends PDO
         $stmt->execute();
     }
 
-    public function fetchScalar(string $type, string $query, array $binds = array())
+    public function fetchScalar(Type $type, string $query, array $binds = array())
     {
-        $stmt = $this->prepare($query);        
+        $stmt = $this->prepare($query);
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
@@ -32,15 +32,15 @@ class Db extends PDO
         $stmt->execute();
         $result = $stmt->fetchColumn();
 
-        if ($type == 'int') return intval($result);
-        else if ($type == 'bool') return boolval($result);
+        if ($type == Type::Int) return intval($result);
+        else if ($type == Type::Bool) return boolval($result);
         else return $result;
     }
     
     public function fetchArray(string $key, string $value, string $query, array $binds = array())
     {
         $array = array();
-        $stmt = $this->prepare($query);        
+        $stmt = $this->prepare($query);
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
@@ -67,7 +67,7 @@ class Db extends PDO
     public function fetchModel(string $modelName, string $query, array $binds = array())
     {
         $model = null;
-        $stmt = $this->prepare($query);        
+        $stmt = $this->prepare($query);
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
@@ -85,7 +85,7 @@ class Db extends PDO
     public function fetchArrayModel(string $modelName, string $query, array $binds = array())
     {
         $arrayModel = array();
-        $stmt = $this->prepare($query);        
+        $stmt = $this->prepare($query);
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
