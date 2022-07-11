@@ -72,10 +72,7 @@ class Mapping
 
     public function mapping($row)
     {
-        if (count($this->rowKeys) == 0)
-        {
-            $this->rowKeys = array_keys($row);
-        }
+        if (count($this->rowKeys) == 0) $this->rowKeys = array_keys($row);
 
         $className = $this->class;
         $class = new $className();
@@ -87,10 +84,7 @@ class Mapping
                 $type = $this->types[$key];
                 $null = $this->nulls[$key];
                 $value = $row[$key];
-                if ($value == null && $null)
-                {
-                    $class->{$prop} = null;
-                }
+                if ($value == null && $null) $class->{$prop} = null;
                 else
                 {
                     switch ($type) 
