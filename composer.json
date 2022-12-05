@@ -1,16 +1,16 @@
 {
-    "name": "injix/orm",
+    "name": "stuhi/orm",
     "description": "ORM",
     "type": "library",
     "license": "mit",
     "autoload": {
         "psr-4": {
-            "Injix\\Orm\\": "src/"
+            "Stuhi\\Orm\\": "src/"
         }
     },
     "authors": [
         {
-            "name": "injix"
+            "name": "stuhi"
         }
     ],
     "minimum-stability": "dev",
