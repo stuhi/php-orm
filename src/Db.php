@@ -1,5 +1,5 @@
 <?php
-namespace Injix\Orm;
+namespace Stuhi\Orm;
 
 use \PDO;
 
