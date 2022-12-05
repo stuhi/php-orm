@@ -1,5 +1,5 @@
 <?php
-namespace Injix\Orm\Attributes;
+namespace Stuhi\Orm\Attributes;
 
 use \Attribute;
 
