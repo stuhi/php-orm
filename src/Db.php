@@ -93,13 +93,19 @@ class Db extends PDO
         }
         $stmt->execute();
         $mapping = new Mapping($modelName);
+        $j = 0;
         if ($mapping->hasId && $mapping->hasParentId)
         {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
             {
                 $model = $mapping->mapping($row);
                 if ($model->parentId == null) $arrayModel[$model->id] = $model;
-                else $this->_setChild($arrayModel, $model, 0);
+                else if (count($arrayModel) == 0) 
+                {
+                    $arrayModel[$model->id] = $model;
+                    $j = count($model->parentIds);
+                }
+                else $this->_setChild($arrayModel, $model, $j);
             }
         }
         else if ($mapping->hasId)
@@ -125,7 +131,7 @@ class Db extends PDO
         if (count($model->parentIds) > $i)
         {
             if ($model->parentIds[$i] == $model->parentId) $arrayModel[$model->parentIds[$i]]->childs[$model->id] = $model;
-            else $this->_setChild($arrayModel[$model->parentIds[$i]]->childs, $model, $i++);
+            else $this->_setChild($arrayModel[$model->parentIds[$i]]->childs, $model, $i + 1);
         }
     }
 }
