@@ -22,7 +22,7 @@ class Mapping
     {
         $class = (new ReflectionClass($className));
         $properties = $class->getProperties(ReflectionProperty::IS_PUBLIC);
-        $classAttrs = $class->getAttributes('Injix\Orm\Attributes\ID');
+        $classAttrs = $class->getAttributes('Stuhi\Orm\Attributes\ID');
         if (count($classAttrs) > 0)
         {
             $countArguments = count($classAttrs[0]->getArguments());
@@ -57,7 +57,7 @@ class Mapping
         foreach ($properties as $property)
         {
             $name = $property->getName();
-            $propertyAttrs = $property->getAttributes('Injix\Orm\Attributes\COLUMN');
+            $propertyAttrs = $property->getAttributes('Stuhi\Orm\Attributes\COLUMN');
             if (count($propertyAttrs) > 0)
             {
                 $column = $propertyAttrs[0]->getArguments()[0];
