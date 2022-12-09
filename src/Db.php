@@ -5,9 +5,20 @@ use \PDO;
 
 class Db extends PDO
 {
-    public function __construct(string $server, string $dbname, string $user, string $password)
+    private static $db;
+
+    private function __construct(array $connectionArray)
     {
-        parent::__construct('mysql:host=' . $server . ';dbname=' . $dbname, $user, $password);
+        parent::__construct('mysql:host=' . $connectionArray[0] . ';dbname=' . $connectionArray[1], $connectionArray[2], $connectionArray[3]);
+    }    
+
+    public static function getDb(array $connectionArray) : self
+    {
+        if (self::$db === null) 
+        {
+            self::$db = new self($connectionArray);
+        }
+        return self::$db;
     }
 
     public function execute(string $query, array $binds = array())
