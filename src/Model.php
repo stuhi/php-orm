@@ -1,5 +1,5 @@
 <?php
-namespace Stuhi\Orm;
+namespace Orm;
 
 class Model
 {  
