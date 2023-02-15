@@ -104,6 +104,24 @@ class Db extends PDO
         }
         $stmt->execute();
         $mapping = new Mapping($modelName);
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC))
+        {
+            $arrayModel[] = $mapping->mapping($row);
+        }
+        return $arrayModel;
+    }
+
+    public function fetchArrayModelWithChild(string $modelName, string $query, array $binds = array())
+    {
+        $arrayModel = array();
+        $stmt = $this->prepare($query);
+        $countBinds = count($binds);
+        for ($i = 0; $i < $countBinds; $i++)
+        {
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+        }
+        $stmt->execute();
+        $mapping = new Mapping($modelName);
         $j = 0;
         if ($mapping->hasId && $mapping->hasParentId)
         {
