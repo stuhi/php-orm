@@ -7,16 +7,16 @@ class Db extends PDO
 {
     private static $db;
 
-    private function __construct(string $host, string $dbname, string $user, string $password)
+    private function __construct(string $server, string $host, string $dbname, string $user, string $password)
     {
-        parent::__construct('mysql:host=' . $host . ';dbname=' . $dbname, $user, $password);
+        parent::__construct($server . ':host=' . $host . ';dbname=' . $dbname, $user, $password);
     }    
 
-    public static function getDb(string $host, string $dbname, string $user, string $password) : self
+    public static function getDb(array $connectionArray) : self
     {
         if (self::$db === null) 
         {
-            self::$db = new self($host, $dbname, $user, $password);
+            self::$db = new self($connectionArray[0], $connectionArray[1], $connectionArray[2], $connectionArray[3], $connectionArray[4]);
         }
         return self::$db;
     }
