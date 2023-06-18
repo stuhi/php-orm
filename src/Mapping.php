@@ -104,7 +104,17 @@ class Mapping
 
     private function _mapArray(string $value) : array
     {
-        return (!empty($value)) ? array_values(array_filter(explode('|', $value), function ($item) { return !empty($item); })) : array();
+        $array = array();
+        if (str_contains($value, '|')) 
+        {
+            $array = array_values(array_filter(explode('|', $value), function ($item) { return !empty($item); }));
+        }
+        else if (str_contains($value, '{')) 
+        {
+            $value = str_replace(array('{', '}'), ',', $value);
+            $array = array_values(array_filter(explode(',', $value), function ($item) { return !empty($item); }));
+        }
+        return $array;
     }
 
     private function _getType($type)
