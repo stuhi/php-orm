@@ -6,19 +6,19 @@ use PDO;
 class Bind
 {
     public $name;
-    public $value;
-    public $type;
+    private $value;
+    private $type;
 
     public function __construct(string $name, mixed $value, Type $type)
     {
         $this->name = $name;
-        $this->value = self::_setValue($value, $type);
-        $this->type = self::_setType($type);
+        $this->value = $value;
+        $this->type = $type;
     }
 
-    private static function _setType($type)
+    public function getType()
     {
-        switch($type)
+        switch($this->type)
         {
             case Type::Int: return PDO::PARAM_INT;
             case Type::Bool: return PDO::PARAM_BOOL;
@@ -30,17 +30,41 @@ class Bind
         return PDO::PARAM_STR;
     }
 
-    private static function _setValue($value, $type)
+    public function getValue(string $server)
     {
-        switch($type)
+        switch($server)
         {
-            case Type::Int: return $value;
-            case Type::Bool: return $value;
-            case Type::Date: return $value->format('Y-m-d');
-            case Type::DateTime: return $value->format('Y-m-d H:i:s');
-            case Type::String: return $value;
-            case Type::Array: return count($value) > 0 ? ('|' . implode('|', $value) . '|') : '';
+            case 'mysql': return self::_getValueMySQL();
+            case 'pgsql': return self::_getValuePgSQL();
         }
-        return PDO::PARAM_STR;
+        return '';
+    }
+
+    private function _getValueMySQL()
+    {
+        switch($this->type)
+        {
+            case Type::Int: return $this->value;
+            case Type::Bool: return $this->value;
+            case Type::Date: return $this->value->format('Y-m-d');
+            case Type::DateTime: return $this->value->format('Y-m-d H:i:s');
+            case Type::String: return $this->value;
+            case Type::Array: return count($this->value) > 0 ? ('|' . implode('|', $this->value) . '|') : '';
+        }
+        return '';
+    }
+
+    private function _getValuePgSQL()
+    {
+        switch($this->type)
+        {
+            case Type::Int: return $this->value;
+            case Type::Bool: return $this->value;
+            case Type::Date: return $this->value->format('Y-m-d');
+            case Type::DateTime: return $this->value->format('Y-m-d H:i:s');
+            case Type::String: return $this->value;
+            case Type::Array: return count($this->value) > 0 ? ('{' . implode(',', $this->value) . '}') : null;
+        }
+        return '';
     }
 }
