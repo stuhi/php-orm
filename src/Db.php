@@ -6,11 +6,13 @@ use \PDO;
 class Db extends PDO
 {
     private static $db;
+    public string $server;
 
     private function __construct(string $server, string $host, string $dbname, string $user, string $password)
     {
         parent::__construct($server . ':host=' . $host . ';dbname=' . $dbname, $user, $password);
-    }    
+        $this->server = $server;
+    }     
 
     public static function getDb(array $connectionArray) : self
     {
@@ -27,7 +29,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
     }
@@ -38,7 +40,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
         $result = $stmt->fetchColumn();
@@ -55,7 +57,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
         if (empty($key))
@@ -82,7 +84,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
         $mapping = new Mapping($modelName);
@@ -100,7 +102,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
         $mapping = new Mapping($modelName);
@@ -118,7 +120,7 @@ class Db extends PDO
         $countBinds = count($binds);
         for ($i = 0; $i < $countBinds; $i++)
         {
-            $stmt->bindValue($binds[$i]->name, $binds[$i]->value, $binds[$i]->type);
+            $stmt->bindValue($binds[$i]->name, $binds[$i]->getValue($this->server), $binds[$i]->getType());
         }
         $stmt->execute();
         $mapping = new Mapping($modelName);
